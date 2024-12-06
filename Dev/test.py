@@ -30,13 +30,12 @@ while running:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         player_pos.x += 300 * dt
-
+    #changes the position of the player by a preset amount each time the button is pressed
     # flip() the display to put your work on screen
     pygame.display.flip()
 
     # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
+    # dt is delta time in seconds since the last frame
     dt = clock.tick(60) / 1000
 
 pygame.quit()
