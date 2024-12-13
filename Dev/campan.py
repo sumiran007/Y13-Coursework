@@ -34,15 +34,10 @@ pygame.display.set_caption("Automatic Camera Panning")
 
 width = 1000
 height = 100000
-
-
 white = (255, 255, 255)
 green = (0, 200, 0)
-
-
 camera_x, camera_y = 0, 0
 camera_speed_x, camera_speed_y = 0, -2
-
 squarew = width//2
 squarew = height//2
 objects = [pygame.Rect(x * 100, y * 100, 50, 50) for x in range(squarew) for y in range(12)]
