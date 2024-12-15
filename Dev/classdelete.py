@@ -7,7 +7,7 @@ class ChangingScreen:
         self.sizew, self.sizeh = sizew, sizeh
         self.spacing = spacing
         self.camera_x, self.camera_y = 0, 0
-        self.camera_speed_x, self.camera_speed_y = 0, -5  # Camera moves up
+        self.camera_speed_x, self.camera_speed_y = 0, -2  # Camera moves up
         self.objects = []
         self.white = (255, 255, 255)
         self.green = (0, 255, 0)
