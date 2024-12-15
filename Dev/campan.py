@@ -1,52 +1,53 @@
 import pygame
-from pygame.locals import *
 
-# Initialize Pygame
-pygame.init()
+def initialize():
+    pygame.init()
+    width, height = 1000, 1000
+    screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Camera Pan Example")
+    clock = pygame.time.Clock()
+    return screen, clock, width, height
 
-
-sizew, sizeh = 800, 600
-screen = pygame.display.set_mode((sizew, sizeh))
-pygame.display.set_caption("Automatic Camera Panning")
-
-
-width = 1000
-height = 100000
-white = (255, 255, 255)
-green = (0, 200, 0)
-camera_x, camera_y = 0, 0
-camera_speed_x, camera_speed_y = 0, -2
-squarew = width//2
-squarew = height//2
-objects = [pygame.Rect(x * 100, y * 100, 50, 50) for x in range(squarew) for y in range(12)]
-
-
-running = True
-clock = pygame.time.Clock()
-
-while running:
+def handle_events():
     for event in pygame.event.get():
-        if event.type == QUIT:
-            running = False
+        if event.type == pygame.QUIT:
+            return False
+    return True
 
-    # Update camera position automatically
+def update_camera(camera_x, camera_y, camera_speed_x, camera_speed_y, width, height, sizew, sizeh):
     camera_x += camera_speed_x
     camera_y += camera_speed_y
 
-    # Keep camera within world bounds
     if camera_x < 0 or camera_x > width - sizew:
-        camera_speed_x = -camera_speed_x  # Reverse direction
+        camera_speed_x = -camera_speed_x
     if camera_y < 0 or camera_y > height - sizeh:
-        camera_speed_y = -camera_speed_y  
+        camera_speed_y = -camera_speed_y
 
-    # Drawing
+    return camera_x, camera_y, camera_speed_x, camera_speed_y
+
+def draw(screen, white, green, objects, camera_x, camera_y):
     screen.fill(white)
-
-    # Draw objects relative to the camera
     for obj in objects:
         pygame.draw.rect(screen, green, obj.move(-camera_x, -camera_y))
- 
     pygame.display.flip()
-    clock.tick(60)
 
-pygame.quit()
+def main():
+    screen, clock, width, height = initialize()
+    white = (255, 255, 255)
+    green = (0, 255, 0)
+    sizew, sizeh = 50, 50
+    camera_x, camera_y = 0, 0
+    camera_speed_x, camera_speed_y = 5, 5
+    objects = [pygame.Rect(100, 100, sizew, sizeh), pygame.Rect(300, 300, sizew, sizeh)]
+
+    running = True
+    while running:
+        running = handle_events()
+        camera_x, camera_y, camera_speed_x, camera_speed_y = update_camera(camera_x, camera_y, camera_speed_x, camera_speed_y, width, height, sizew, sizeh)
+        draw(screen, white, green, objects, camera_x, camera_y)
+        clock.tick(60)
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
