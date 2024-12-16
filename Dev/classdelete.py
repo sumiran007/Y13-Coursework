@@ -3,6 +3,7 @@ import pygame
 class ChangingScreen:
     def __init__(self, width=800, height=600, sizew=50, sizeh=50, spacing=50):
         pygame.init()
+        self.start_y = 0
         self.width, self.height = width, height
         self.sizew, self.sizeh = sizew, sizeh
         self.spacing = spacing
@@ -14,7 +15,7 @@ class ChangingScreen:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Camera Pan Example")
         self.clock = pygame.time.Clock()
-        self.add_squares(100)  # Add 100 green squares initially
+        self.add_squares(100, start_y = self.height)  # Add 100 green squares initially
 
     def add_squares(self, count, start_y=0):
         cols = int(self.width / (self.sizew + self.spacing))
