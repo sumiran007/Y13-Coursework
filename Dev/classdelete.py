@@ -38,7 +38,7 @@ class ChangingScreen:
             self.add_squares(100, start_y=self.camera_y - self.height)
 
         # Remove squares that are no longer visible
-        self.objects = [obj for obj in self.objects if obj.y + self.sizeh + self.spacing > -self.camera_y]
+        self.objects = [obj for obj in self.objects if obj.y < self.camera_y + self.height]
 
     def draw(self):
         self.screen.fill(self.white)
