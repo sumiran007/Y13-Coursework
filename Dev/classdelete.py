@@ -8,7 +8,7 @@ class ChangingScreen:
         self.sizew, self.sizeh = sizew, sizeh
         self.spacing = spacing
         self.camera_x, self.camera_y = 0, 0
-        self.camera_speed_x, self.camera_speed_y = 0, -2  # Camera moves up
+        self.camera_speed_x, self.camera_speed_y = 0, -5  # Camera moves up
         self.objects = []
         self.white = (255, 255, 255)
         self.green = (0, 255, 0)
@@ -19,7 +19,7 @@ class ChangingScreen:
 
     def add_squares(self, count, start_y=0):
         cols = int(self.width / (self.sizew + self.spacing))
-        for i in range(count):
+        for i in range(count): 
             x = (i % cols) * (self.sizew + self.spacing)
             y = start_y + (i // cols) * (self.sizeh + self.spacing)
             self.objects.append(pygame.Rect(x, y, self.sizew, self.sizeh))
@@ -36,7 +36,7 @@ class ChangingScreen:
         # Generate new squares if the camera has moved up enough
         if self.camera_y < -self.height:
             self.camera_y += self.height
-            self.add_squares(100, start_y=self.camera_y - self.height)
+            self.add_squares(100, start_y=self.camera_y - self.height)    
 
         # Remove squares that are no longer visible
         self.objects = [obj for obj in self.objects if obj.y < self.camera_y + self.height]
@@ -53,9 +53,9 @@ class ChangingScreen:
             running = self.handle_events()
             self.update_camera()
             self.draw()
-            self.clock.tick(60)
+            self.clock.tick(30)
         pygame.quit()
-
+#set to 30 fps to make it more efficient
 if __name__ == "__main__":
     game = ChangingScreen()
-    game.run()
+    game.run()  
