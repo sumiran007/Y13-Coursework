@@ -1,0 +1,58 @@
+QWidget {
+    background-color: #e6f2ff;
+}
+
+QFrame {
+    background-color: white;
+    border-radius: 10px;
+    border: none;
+}
+
+QLabel#loginLabel {
+    color: #4285F4;
+    margin-bottom: 5px;
+}
+
+QLabel {
+    color: #4285F4;
+    font-family: Arial;
+    font-size: 11pt;
+}
+
+QLineEdit {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 13px;
+    height: 35px;
+}
+
+QLineEdit:focus {
+    border: 1px solid #4285F4;
+}
+
+QPushButton {
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    height: 40px;
+    color: white;
+}
+
+QPushButton#loginButton {
+    background-color: #4285F4;
+}
+
+QPushButton#loginButton:hover {
+    background-color: #3b78e7;
+}
+
+QPushButton#signupButton {
+    background-color: #4CAF50;
+}
+
+QPushButton#signupButton:hover {
+    background-color: #45a049;
+}
