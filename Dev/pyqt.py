@@ -1,6 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QWidget, QLineEdit, QVBoxLayout, 
-                             QPushButton, QLabel, QFrame)
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QVBoxLayout, QPushButton, QLabel, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
@@ -47,7 +46,8 @@ class LoginWindow(QWidget):
         # Sign up button
         signup_button = QPushButton("Sign Up")
         signup_button.setObjectName("signupButton")
-
+        layout.customEvent = lambda event: event.accept()  # Custom event to handle button clicks
+        login_button.clicked.connect(lambda: print("Login clicked"))
         layout.addWidget(login_label)
         layout.addStretch(1)
         layout.addWidget(username_label)
