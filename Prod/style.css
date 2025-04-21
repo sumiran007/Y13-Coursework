@@ -1,0 +1,154 @@
+/* Base styling for all widgets */
+QWidget {
+    background-color: #e6f2ff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+/* Frame styling */
+QFrame {
+    background-color: white;
+    border-radius: 10px;
+    border: none;
+}
+
+/* Label styling */
+QLabel {
+    color: #4285F4;
+    font-family: Arial;
+    font-size: 11pt;
+}
+
+QLabel#loginLabel, QLabel#welcomeLabel, QLabel#titleLabel {
+    color: #4285F4;
+    margin-bottom: 5px;
+    font-size: 18pt;
+}
+
+/* Input field styling */
+QLineEdit {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 13px;
+    height: 35px;
+}
+
+QLineEdit:focus {
+    border: 1px solid #4285F4;
+}
+
+/* Button styling */
+QPushButton {
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    height: 40px;
+    color: white;
+}
+
+/* Login button */
+QPushButton#loginButton {
+    background-color: #4285F4;
+}
+
+QPushButton#loginButton:hover {
+    background-color: #3b78e7;
+}
+
+/* Signup button */
+QPushButton#signupButton {
+    background-color: #4CAF50;
+}
+
+QPushButton#signupButton:hover {
+    background-color: #45a049;
+}
+
+/* Start Game button */
+QPushButton#startButton {
+    background-color: #4285F4;
+}
+
+QPushButton#startButton:hover {
+    background-color: #3b78e7;
+}
+
+/* High Scores button */
+QPushButton#scoresButton {
+    background-color: #FF9800;
+}
+
+QPushButton#scoresButton:hover {
+    background-color: #F57C00;
+}
+
+/* Exit button */
+QPushButton#exitButton {
+    background-color: #F44336;
+}
+
+QPushButton#exitButton:hover {
+    background-color: #E53935;
+}
+
+/* Close button */
+QPushButton#closeButton {
+    background-color: #757575;
+}
+
+QPushButton#closeButton:hover {
+    background-color: #616161;
+}
+
+/* Table styling for high scores */
+QTableWidget {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    gridline-color: #f0f0f0;
+}
+
+QTableWidget::item {
+    padding: 5px;
+}
+
+QTableWidget::item:selected {
+    background-color: #e6f2ff;
+    color: #4285F4;
+}
+
+QHeaderView::section {
+    background-color: #4285F4;
+    color: white;
+    padding: 5px;
+    border: none;
+    font-weight: bold;
+}
+
+/* Scrollbar styling */
+QScrollBar:vertical {
+    border: none;
+    background: #f0f0f0;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #4285F4;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+/* Status bar styling */
+QStatusBar {
+    background-color: #f0f0f0;
+    color: #4285F4;
+}
