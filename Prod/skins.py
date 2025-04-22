@@ -63,66 +63,51 @@ class SkinSelector:
         skins = []
         skins_dir = "assets/skins"
         
-        #Make a default frog skin
-        default_skin = {
-            "name": "Frog",
-            "image": self.create_frog_skin(),  #Make a simple frog programmatically
-            "color": None
-        }
-        skins.append(default_skin)
-        
         #Check if the skins folder exists
         if os.path.exists(skins_dir):
             #Grab all image files
-            for filename in os.listdir(skins_dir):
-                if filename.endswith(('.png', '.jpg', '.jpeg')):
-                    try:
-                        image_path = os.path.join(skins_dir, filename)
-                        image = pygame.image.load(image_path)
-                        #Get skin name from filename
-                        skin_name = os.path.splitext(filename)[0]
-                        
-                        skin = {
-                            "name": skin_name,
-                            "image": image,
-                            "color": None  #No color for image skins
-                        }
-                        skins.append(skin)
-                    except pygame.error:
-                        print(f"Couldn't load skin image: {filename}")
+            skin_files = [f for f in os.listdir(skins_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
+            
+            # Find the frog.png to make it the default (first in the list)
+            frog_skin_index = -1
+            for i, filename in enumerate(skin_files):
+                if filename.lower() == "frog.png":
+                    frog_skin_index = i
+                    break
+            
+            # If frog.png exists, move it to the front of the list
+            if frog_skin_index != -1:
+                skin_files.insert(0, skin_files.pop(frog_skin_index))
+            
+            # Load all skin images
+            for filename in skin_files:
+                try:
+                    image_path = os.path.join(skins_dir, filename)
+                    image = pygame.image.load(image_path)
+                    #Get skin name from filename
+                    skin_name = os.path.splitext(filename)[0].capitalize()
+                    
+                    skin = {
+                        "name": skin_name,
+                        "image": image,
+                        "color": None  #No color for image skins
+                    }
+                    skins.append(skin)
+                except pygame.error:
+                    print(f"Couldn't load skin image: {filename}")
+        
+        # If no skins were loaded, create a basic colored square as a fallback
+        if not skins:
+            fallback_surface = pygame.Surface((64, 64))
+            fallback_surface.fill((34, 139, 34))  # Green color
+            skins.append({
+                "name": "Default",
+                "image": fallback_surface,
+                "color": None
+            })
+            print("Warning: No skin images found in assets/skins directory. Using fallback skin.")
         
         return skins
-
-    def create_frog_skin(self):
-        #Draw a simple frog
-        size = 64
-        surface = pygame.Surface((size, size), pygame.SRCALPHA)
-        
-        #Frog body (green oval)
-        frog_green = (34, 139, 34)  #Forest green
-        pygame.draw.ellipse(surface, frog_green, (0, 10, size, size-20))
-        
-        #Frog eyes (white circles with black pupils)
-        eye_size = size // 6
-        pygame.draw.circle(surface, (255, 255, 255), (size//3, size//3), eye_size)
-        pygame.draw.circle(surface, (255, 255, 255), (2*size//3, size//3), eye_size)
-        
-        #Pupils
-        pupil_size = eye_size // 2
-        pygame.draw.circle(surface, (0, 0, 0), (size//3, size//3), pupil_size)
-        pygame.draw.circle(surface, (0, 0, 0), (2*size//3, size//3), pupil_size)
-        
-        #Frog legs
-        leg_color = (26, 120, 26)  #Slightly darker green
-        #Back legs
-        pygame.draw.ellipse(surface, leg_color, (5, size-20, size//4, size//3))
-        pygame.draw.ellipse(surface, leg_color, (size-size//4-5, size-20, size//4, size//3))
-        
-        #Front legs
-        pygame.draw.ellipse(surface, leg_color, (size//5, size//2, size//5, size//3))
-        pygame.draw.ellipse(surface, leg_color, (3*size//5, size//2, size//5, size//3))
-        
-        return surface
     
     def draw_button(self, button, text):
         #Draw a button with text
