@@ -111,6 +111,15 @@ QTableWidget {
     border-radius: 5px;
 }
 
+/* Add this block for the skins button */
+QPushButton#skinsButton {
+    background-color: #9C27B0;
+}
+
+QPushButton#skinsButton:hover {
+    background-color: #8E24AA;
+}  
+
 QTableWidget::item {
     padding: 5px;
 }

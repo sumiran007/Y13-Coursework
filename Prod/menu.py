@@ -4,11 +4,16 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 import subprocess
 from database import get_high_scores
+import json
+import os
 
 class MenuWindow(QWidget):
     def __init__(self, username="player"):
         super().__init__()
         self.username = username
+        
+        # Will store the selected skin
+        self.selected_skin = None
         
         #Get our styles
         with open("style.css", "r") as file:
@@ -48,6 +53,12 @@ class MenuWindow(QWidget):
         scores_button.clicked.connect(self.show_high_scores)
         scores_button.setObjectName("scoresButton")
         
+        #Skins button
+        skins_button = QPushButton("Choose Skin")
+        skins_button.setFixedHeight(50)
+        skins_button.clicked.connect(self.select_skin)
+        skins_button.setObjectName("skinsButton")
+        
         #Exit button
         exit_button = QPushButton("Exit")
         exit_button.setFixedHeight(50)
@@ -59,6 +70,7 @@ class MenuWindow(QWidget):
         layout.addStretch(1)
         layout.addWidget(start_button)
         layout.addWidget(scores_button)
+        layout.addWidget(skins_button)
         layout.addWidget(exit_button)
         layout.addStretch(1)
         
@@ -67,8 +79,12 @@ class MenuWindow(QWidget):
     def start_game(self):
         self.hide()  #Hide menu while playing
         try:
-            #Fire up the game
-            subprocess.run(["python", "game.py", self.username])
+            #Fire up the game with username and selected skin
+            cmd = ["python", "game.py", self.username]
+            if self.selected_skin:
+                cmd.append(self.selected_skin.get("name", ""))
+            
+            subprocess.run(cmd)
             self.show()  #Show menu again after game
         except Exception as e:
             print(f"Oops, game crashed: {e}")
@@ -78,6 +94,60 @@ class MenuWindow(QWidget):
         #Pop up high scores window
         self.scores_window = HighScoresWindow()
         self.scores_window.show()
+        
+    def select_skin(self):
+        self.hide()  # Hide menu while selecting skin
+        try:
+            # Import the skin selector
+            from skins import select_skin
+            
+            # Run the skin selector and get the chosen skin
+            selected_skin = select_skin()
+            
+            if selected_skin:
+                self.selected_skin = selected_skin
+                print(f"Selected skin: {selected_skin['name']}")
+            
+            self.show()  # Show menu again
+        except Exception as e:
+            print(f"Error selecting skin: {e}")
+            self.show()
+
+class SkinsWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+        #Get styles
+        with open("style.css", "r") as file:
+            stylesheet = file.read()
+        self.setStyleSheet(stylesheet)
+        
+        self.initUI()
+        
+    def initUI(self):
+        self.setWindowTitle('Skins')
+        self.setFixedSize(400, 500)
+        
+        layout = QVBoxLayout()
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(20)
+        
+        #Title
+        title = QLabel("Skins")
+        title.setAlignment(Qt.AlignCenter)
+        title.setFont(QFont("Arial", 18))
+        title.setObjectName("titleLabel")
+        
+        #Close button
+        close_button = QPushButton("Close")
+        close_button.clicked.connect(self.close)
+        close_button.setObjectName("closeButton")
+        
+        #Add to layout
+        layout.addWidget(title)
+        layout.addWidget(close_button)
+        
+        self.setLayout(layout)
 
 
 class HighScoresWindow(QWidget):
@@ -119,7 +189,7 @@ class HighScoresWindow(QWidget):
         
         #Add to layout
         layout.addWidget(title)
-        layout.addWidget(self.table)
+        layout.addWidget(self.table) 
         layout.addWidget(close_button)
         
         self.setLayout(layout)
