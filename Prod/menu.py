@@ -10,204 +10,204 @@ import os
 class MenuWindow(QWidget):
     def __init__(self, username="player"):
         super().__init__()
-        self.username = username
+        self.username = username  #grab their name
         
-        # Will store the selected skin
+        # somewhere to store the picked skin
         self.selected_skin = None
         
-        #Get our styles
+        #make it look snazzy with some CSS
         with open("style.css", "r") as file:
             stylesheet = file.read()
         self.setStyleSheet(stylesheet)
         
-        self.initUI()
+        self.initUI()  #set up all the buttons and stuff
         
     def initUI(self):
-        self.setWindowTitle('Game Menu')
-        self.setFixedSize(500, 500)
+        self.setWindowTitle('Game Menu')  #what shows in the window bar
+        self.setFixedSize(500, 500)  #not too big, not too small
         
-        #Main container
+        #nice box to hold everything
         container = QFrame(self)
         container.setGeometry(50, 50, 400, 400)
         
-        #Layout setup
+        #how stuff gets arranged
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
+        layout.setContentsMargins(20, 20, 20, 20)  #padding around edges
+        layout.setSpacing(20)  #space between items
         
-        #Welcome message
+        #say hi to whoever's playing
         welcome_label = QLabel(f"Welcome, {self.username}!")
         welcome_label.setAlignment(Qt.AlignCenter)
-        welcome_label.setFont(QFont("Arial", 18))
+        welcome_label.setFont(QFont("Arial", 18))  #big friendly text
         welcome_label.setObjectName("welcomeLabel")
         
-        #Play button
+        #big green play button
         start_button = QPushButton("Start Game")
         start_button.setFixedHeight(50)
-        start_button.clicked.connect(self.start_game)
+        start_button.clicked.connect(self.start_game)  #what happens when clicked
         start_button.setObjectName("startButton")
         
-        #High Scores button
+        #button to check scores
         scores_button = QPushButton("High Scores")
         scores_button.setFixedHeight(50)
         scores_button.clicked.connect(self.show_high_scores)
         scores_button.setObjectName("scoresButton")
         
-        #Skins button
+        #button to pick cool skins
         skins_button = QPushButton("Choose Skin")
         skins_button.setFixedHeight(50)
         skins_button.clicked.connect(self.select_skin)
         skins_button.setObjectName("skinsButton")
         
-        #Exit button
+        #escape hatch
         exit_button = QPushButton("Exit")
         exit_button.setFixedHeight(50)
-        exit_button.clicked.connect(self.close)
+        exit_button.clicked.connect(self.close)  #bye bye
         exit_button.setObjectName("exitButton")
         
-        #Add to layout
+        #chuck it all in the layout
         layout.addWidget(welcome_label)
-        layout.addStretch(1)
+        layout.addStretch(1)  #some breathing room
         layout.addWidget(start_button)
         layout.addWidget(scores_button)
         layout.addWidget(skins_button)
         layout.addWidget(exit_button)
-        layout.addStretch(1)
+        layout.addStretch(1)  #more breathing room at bottom
         
-        self.show()
+        self.show()  #ta-da! display the window
     
     def start_game(self):
-        self.hide()  #Hide menu while playing
+        self.hide()  #hide menu while they're playing
         try:
-            #Fire up the game with username and selected skin
+            #fire up the actual game
             cmd = ["python", "game.py", self.username]
             if self.selected_skin:
-                cmd.append(self.selected_skin.get("name", ""))
+                cmd.append(self.selected_skin.get("name", ""))  #tell game which skin to use
             
-            subprocess.run(cmd)
-            self.show()  #Show menu again after game
+            subprocess.run(cmd)  #run the game
+            self.show()  #bring menu back when done
         except Exception as e:
-            print(f"Oops, game crashed: {e}")
-            self.show()
+            print(f"Oops, game crashed: {e}")  #uh oh
+            self.show()  #show menu anyway
     
     def show_high_scores(self):
-        #Pop up high scores window
+        #pop up the leaderboard
         self.scores_window = HighScoresWindow()
-        self.scores_window.show()
+        self.scores_window.show()  #show off who's winning
         
     def select_skin(self):
-        self.hide()  # Hide menu while selecting skin
+        self.hide()  #hide menu while picking a skin
         try:
-            # Import the skin selector
+            #import the fancy skin picker
             from skins import select_skin
             
-            # Run the skin selector and get the chosen skin
+            #let them choose and grab what they picked
             selected_skin = select_skin()
             
             if selected_skin:
-                self.selected_skin = selected_skin
-                print(f"Selected skin: {selected_skin['name']}")
+                self.selected_skin = selected_skin  #remember their choice
+                print(f"Selected skin: {selected_skin['name']}")  #log it
             
-            self.show()  # Show menu again
+            self.show()  #show menu again
         except Exception as e:
-            print(f"Error selecting skin: {e}")
+            print(f"Error selecting skin: {e}")  #something went wrong
             self.show()
 
 class SkinsWindow(QWidget):
     def __init__(self):
         super().__init__()
         
-        #Get styles
+        #make it pretty
         with open("style.css", "r") as file:
             stylesheet = file.read()
         self.setStyleSheet(stylesheet)
         
-        self.initUI()
+        self.initUI()  #set it up
         
     def initUI(self):
         self.setWindowTitle('Skins')
-        self.setFixedSize(400, 500)
+        self.setFixedSize(400, 500)  #decent size window
         
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
+        layout.setContentsMargins(20, 20, 20, 20)  #nice margins
+        layout.setSpacing(20)  #gap between things
         
-        #Title
+        #big title at the top
         title = QLabel("Skins")
         title.setAlignment(Qt.AlignCenter)
-        title.setFont(QFont("Arial", 18))
+        title.setFont(QFont("Arial", 18))  #make it stand out
         title.setObjectName("titleLabel")
         
-        #Close button
+        #button to get outta here
         close_button = QPushButton("Close")
-        close_button.clicked.connect(self.close)
+        close_button.clicked.connect(self.close)  #closes the window
         close_button.setObjectName("closeButton")
         
-        #Add to layout
+        #add everything to the window
         layout.addWidget(title)
         layout.addWidget(close_button)
         
-        self.setLayout(layout)
+        self.setLayout(layout)  #apply the layout
 
 
 class HighScoresWindow(QWidget):
     def __init__(self):
         super().__init__()
         
-        #Get styles
+        #make it look fancy
         with open("style.css", "r") as file:
             stylesheet = file.read()
         self.setStyleSheet(stylesheet)
         
-        self.initUI()
+        self.initUI()  #set up the window
         
     def initUI(self):
         self.setWindowTitle('High Scores')
-        self.setFixedSize(400, 500)
+        self.setFixedSize(400, 500)  #good size for a score table
         
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(20)
+        layout.setContentsMargins(20, 20, 20, 20)  #padding
+        layout.setSpacing(20)  #space between items
         
-        #Title
+        #big title at the top
         title = QLabel("High Scores")
         title.setAlignment(Qt.AlignCenter)
-        title.setFont(QFont("Arial", 18))
+        title.setFont(QFont("Arial", 18))  #make it pop
         title.setObjectName("titleLabel")
         
-        #Scores table
+        #table to show all the high scores
         self.table = QTableWidget()
-        self.table.setColumnCount(2)
+        self.table.setColumnCount(2)  #just name and score
         self.table.setHorizontalHeaderLabels(["Player", "Score"])
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         
-        #Close button
+        #button to bail out
         close_button = QPushButton("Close")
-        close_button.clicked.connect(self.close)
+        close_button.clicked.connect(self.close)  #closes the window
         close_button.setObjectName("closeButton")
         
-        #Add to layout
+        #stick it all together
         layout.addWidget(title)
-        layout.addWidget(self.table) 
+        layout.addWidget(self.table)  #the score table gets most of the space
         layout.addWidget(close_button)
         
         self.setLayout(layout)
         
-        #Grab scores
+        #fill the table with actual scores
         self.load_scores()
     
     def load_scores(self):
-        scores = get_high_scores()
-        self.table.setRowCount(len(scores))
+        scores = get_high_scores()  #grab from database
+        self.table.setRowCount(len(scores))  #make room for all scores
         
         for i, (username, score) in enumerate(scores):
-            self.table.setItem(i, 0, QTableWidgetItem(username))
-            self.table.setItem(i, 1, QTableWidgetItem(str(score)))
+            self.table.setItem(i, 0, QTableWidgetItem(username))  #player name
+            self.table.setItem(i, 1, QTableWidgetItem(str(score)))  #their score
 
 
 def menu(username="player"):
-    window = MenuWindow(username)
+    window = MenuWindow(username)  #create the main menu
     return window
 
 
@@ -215,6 +215,6 @@ if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
     import sys
     
-    app = QApplication(sys.argv)
-    window = menu()
-    sys.exit(app.exec_())
+    app = QApplication(sys.argv)  #needed for any Qt app
+    window = menu()  #make the menu
+    sys.exit(app.exec_())  #start the app and wait until it exits

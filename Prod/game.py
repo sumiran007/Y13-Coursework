@@ -169,6 +169,9 @@ class ChangingScreen:
         keys = pygame.key.get_pressed()  #checks all keyboard inputs
         moved = False
         
+        # Store the old position to revert if needed
+        old_x, old_y = self.player.x, self.player.y
+        
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.player.x -= self.player_speed  #go left
             moved = True
@@ -182,14 +185,15 @@ class ChangingScreen:
             self.player.y += self.player_speed  #go down
             moved = True
             
-        if (self.player.left <= 0 or 
-            self.player.right >= self.width or 
-            self.player.top <= 0):
+        # Check side and top borders - just block movement
+        if self.player.left < 0:
+            self.player.left = 0  #stop at left edge
+        if self.player.right > self.width:
+            self.player.right = self.width  #stop at right edge
+        if self.player.top < 0:
+            self.player.top = 0  #stop at top edge
             
-            self.game_over = True  #hit edge of screen = dead
-            self.game_over_message = f"Game Over, {self.username}! You hit the edge of the screen."
-            return False
-            
+        # Only the bottom border causes game over
         if self.player.bottom >= self.height:
             self.game_over = True  #fell off bottom = dead
             self.game_over_message = f"Game Over, {self.username}! Too slow - keep up with the screen!"
