@@ -10,7 +10,7 @@ class MenuWindow(QWidget):
         super().__init__()
         self.username = username
         
-        # Load the stylesheet
+        #Get our styles
         with open("style.css", "r") as file:
             stylesheet = file.read()
         self.setStyleSheet(stylesheet)
@@ -21,40 +21,40 @@ class MenuWindow(QWidget):
         self.setWindowTitle('Game Menu')
         self.setFixedSize(500, 500)
         
-        # Create main container
+        #Main container
         container = QFrame(self)
         container.setGeometry(50, 50, 400, 400)
         
-        # Set up layout
+        #Layout setup
         layout = QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(20)
         
-        # Welcome header
+        #Welcome message
         welcome_label = QLabel(f"Welcome, {self.username}!")
         welcome_label.setAlignment(Qt.AlignCenter)
         welcome_label.setFont(QFont("Arial", 18))
         welcome_label.setObjectName("welcomeLabel")
         
-        # Start Game button
+        #Play button
         start_button = QPushButton("Start Game")
         start_button.setFixedHeight(50)
         start_button.clicked.connect(self.start_game)
         start_button.setObjectName("startButton")
         
-        # High Scores button
+        #High Scores button
         scores_button = QPushButton("High Scores")
         scores_button.setFixedHeight(50)
         scores_button.clicked.connect(self.show_high_scores)
         scores_button.setObjectName("scoresButton")
         
-        # Exit button
+        #Exit button
         exit_button = QPushButton("Exit")
         exit_button.setFixedHeight(50)
         exit_button.clicked.connect(self.close)
         exit_button.setObjectName("exitButton")
         
-        # Add everything to layout
+        #Add to layout
         layout.addWidget(welcome_label)
         layout.addStretch(1)
         layout.addWidget(start_button)
@@ -65,17 +65,17 @@ class MenuWindow(QWidget):
         self.show()
     
     def start_game(self):
-        self.hide()  # Hide the menu while game is running
+        self.hide()  #Hide menu while playing
         try:
-            # Run the game using subprocess
+            #Fire up the game
             subprocess.run(["python", "game.py", self.username])
-            self.show()  # Show menu again after game ends
+            self.show()  #Show menu again after game
         except Exception as e:
-            print(f"Error starting game: {e}")
+            print(f"Oops, game crashed: {e}")
             self.show()
     
     def show_high_scores(self):
-        # Create high scores window
+        #Pop up high scores window
         self.scores_window = HighScoresWindow()
         self.scores_window.show()
 
@@ -84,7 +84,7 @@ class HighScoresWindow(QWidget):
     def __init__(self):
         super().__init__()
         
-        # Load the stylesheet
+        #Get styles
         with open("style.css", "r") as file:
             stylesheet = file.read()
         self.setStyleSheet(stylesheet)
@@ -99,32 +99,32 @@ class HighScoresWindow(QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(20)
         
-        # Title
+        #Title
         title = QLabel("High Scores")
         title.setAlignment(Qt.AlignCenter)
         title.setFont(QFont("Arial", 18))
         title.setObjectName("titleLabel")
         
-        # Create table for scores
+        #Scores table
         self.table = QTableWidget()
         self.table.setColumnCount(2)
         self.table.setHorizontalHeaderLabels(["Player", "Score"])
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         
-        # Close button
+        #Close button
         close_button = QPushButton("Close")
         close_button.clicked.connect(self.close)
         close_button.setObjectName("closeButton")
         
-        # Add to layout
+        #Add to layout
         layout.addWidget(title)
         layout.addWidget(self.table)
         layout.addWidget(close_button)
         
         self.setLayout(layout)
         
-        # Load high scores
+        #Grab scores
         self.load_scores()
     
     def load_scores(self):
