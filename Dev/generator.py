@@ -23,11 +23,11 @@ for z in range(200):
         if row_type == "water":
             randoms.append(random.choices(['w', 'l'], weights=[65, 35])[0]) #sets weights to probability of getting water and log
         elif row_type == "road":
-            randoms.append(random.choices(['r'], weights=[100])[0])# sets a 100% probability of getting road since the road will always be road
+            randoms.append(random.choices(['r'], weights=[100])[0])#sets a 100% probability of getting road since the road will always be road
         else:
             randoms.append(random.choices(['g', 's'], weights=[70, 30])[0])#sets the weitghts to probability of getting grass and stone 
     
-    if row_type == "water" and 'l' not in randoms:# makes it so that the game isn't unplayable by making sure there is atleast 1 log per water strip
+    if row_type == "water" and 'l' not in randoms:#makes it so that the game isn't unplayable by making sure there is atleast 1 log per water strip
         random_position = random.randint(0, 9)
         randoms[random_position] = 'l'
     

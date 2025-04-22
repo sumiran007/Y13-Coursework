@@ -7,14 +7,14 @@ class ChangingScreen:
         self.sizew, self.sizeh = sizew, sizeh
         self.spacing = spacing
         self.camera_x, self.camera_y = 0, 0
-        self.camera_speed_x, self.camera_speed_y = 0, -5  # Camera moves up
+        self.camera_speed_x, self.camera_speed_y = 0, -5  #Camera moves up
         self.objects = []
         self.white = (255, 255, 255)
         self.green = (0, 255, 0)
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Camera Pan Example")
         self.clock = pygame.time.Clock()
-        self.add_squares(100)  # Add 100 green squares initially
+        self.add_squares(100)  #Add 100 green squares initially
 
     def add_squares(self, count, start_y=0):
         cols = int(self.width / (self.sizew + self.spacing))
@@ -32,7 +32,7 @@ class ChangingScreen:
     def update_camera(self):
         self.camera_y += self.camera_speed_y
 
-        # Generate new squares if the camera has moved up enough
+        #Generate new squares if the camera has moved up enough
         if self.camera_y < -self.height:
             self.camera_y += self.height
             self.add_squares(100, start_y=self.camera_y - self.height)

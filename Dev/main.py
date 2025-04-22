@@ -14,7 +14,7 @@ def handle_events():
     return True
 
 def update():
-    pass  # Add game state updates here if needed
+    pass  #Add game state updates here if needed
 #function that renders the looks of the window
 def render(screen, player_pos):
     screen.fill("purple")
