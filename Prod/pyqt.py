@@ -88,8 +88,14 @@ def create_login_window():
 
     return login_window
 
-if __name__ == '__main__':
+def start_login():
+    """Function to create and show the login window"""
     app = QApplication(sys.argv)
-    window = create_login_window()
-    window.show()
+    login_window = create_login_window()
+    login_window.show()  # Explicitly show the window
+    return app, login_window
+
+# Only run this block when the file is executed directly
+if __name__ == "__main__":
+    app, login_window = start_login()
     sys.exit(app.exec_())

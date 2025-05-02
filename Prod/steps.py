@@ -145,6 +145,6 @@ class ChangingScreen:
         if self.game_over:
             print("Game Over! You fell off the screen!")
 
-if __name__ == "__main__":
-    game = ChangingScreen()
-    game.run()
+# Direct execution block
+game = ChangingScreen()
+game.run()

@@ -200,10 +200,12 @@ def select_skin():
     selector = SkinSelector()
     return selector.run()
 
-if __name__ == "__main__":
-    #Testing the skin selector
+# Direct execution when run as main script
+if __name__ != "__main__":
+    # Only run this when imported, not when directly executed
+    pass
+else:
+    # Direct execution - for testing
     skin = select_skin()
     if skin:
-        print(f"You picked: {skin['name']}")
-    else:
-        print("You didn't pick a skin")
+        print(f"Selected skin: {skin['name']}")

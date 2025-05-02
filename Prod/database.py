@@ -48,3 +48,17 @@ def get_high_scores():
 
 #Setup the database
 create_tables()
+
+# Direct execution block for database testing/initialization
+if __name__ == "__main__":
+    print("Initializing database...")
+    create_tables()
+    
+    # Test adding a user
+    try:
+        add_user("test_user", "test_password")
+        print("Added test user successfully")
+    except Exception as e:
+        print(f"Note: {e}")
+    
+    print("Database initialized successfully.")

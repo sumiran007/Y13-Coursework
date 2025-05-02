@@ -6,6 +6,7 @@ import subprocess
 from database import get_high_scores
 import json
 import os
+import sys
 
 class MenuWindow(QWidget):
     def __init__(self, username="player"):
@@ -210,11 +211,11 @@ def menu(username="player"):
     window = MenuWindow(username)  #create the main menu
     return window
 
-
+# Direct execution for testing
 if __name__ == "__main__":
-    from PyQt5.QtWidgets import QApplication
-    import sys
-    
-    app = QApplication(sys.argv)  #needed for any Qt app
-    window = menu()  #make the menu
-    sys.exit(app.exec_())  #start the app and wait until it exits
+    app = QApplication(sys.argv)
+    test_username = "test_player"
+    if len(sys.argv) > 1:
+        test_username = sys.argv[1]
+    window = menu(test_username)
+    sys.exit(app.exec_())
