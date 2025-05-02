@@ -5,6 +5,7 @@ import os
 import random
 import json
 from PyQt5.QtWidgets import QApplication, QMessageBox
+from database import update_high_score  # Import the database function
 
 class ChangingScreen:
     def __init__(self, width=800, height=600, sizew=50, sizeh=50, spacing=0, username="player", skin_name=None):
@@ -12,6 +13,7 @@ class ChangingScreen:
         self.username = username
         self.skin_name = skin_name
         self.player_image = None
+        self.final_score = 0  # Track the player's final score
 
         self.start_y = 0
         self.width, self.height = width, height
@@ -222,12 +224,36 @@ class ChangingScreen:
                     }
                     self.objects.append(obj)
 
+    def check_for_stone_collision(self, player_rect):
+        """Check if the player would collide with a stone tile at the given position"""
+        for obj in self.objects:
+            if obj["type"] == "stone":
+                # Create adjusted rectangle for collision detection
+                adjusted_obj_rect = obj["rect"].copy()
+                adjusted_obj_rect.y -= self.camera_y
+                
+                if player_rect.colliderect(adjusted_obj_rect):
+                    return True
+        return False
+
+    def save_score(self):
+        """Save the player's score to the database"""
+        try:
+            if self.username != "player":  # Only save if not using default username
+                success, message = update_high_score(self.username, self.final_score)
+                print(f"Score save attempt: {message}")
+                if success:
+                    self.game_over_message += f"\nYour score of {self.final_score} was saved!"
+        except Exception as e:
+            print(f"Error saving score: {e}")
+
     def handle_events(self):
         keys = pygame.key.get_pressed()
         moved = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.save_score()  # Save score when quitting
                 return False
 
         #check for collisions with objects - with camera offsets applied
@@ -242,6 +268,7 @@ class ChangingScreen:
                 print(f"Collision detected! Player at {self.player}, Truck at {adjusted_obj_rect}")
                 self.game_over = True
                 self.game_over_message = f"Game Over, {self.username}! You were hit by a truck!"
+                self.save_score()  # Save score on truck collision
                 return False
                 
             #check for water collisions
@@ -249,6 +276,7 @@ class ChangingScreen:
                 print(f"Water collision detected! Player at {self.player}, Water at {adjusted_obj_rect}")
                 self.game_over = True
                 self.game_over_message = f"Game Over, {self.username}! You fell into the water!"
+                self.save_score()  # Save score on water collision
                 return False
 
         #add a boost mechanism
@@ -257,18 +285,46 @@ class ChangingScreen:
         else:
             boost = 0
 
+        # Handle movement with stone collision prevention
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.player.x -= self.player_speed + boost
-            moved = True
+            # Create a test rectangle to check for collision
+            test_rect = self.player.copy()
+            test_rect.x -= self.player_speed + boost
+            
+            # Only move if no collision with stone
+            if not self.check_for_stone_collision(test_rect):
+                self.player.x -= self.player_speed + boost
+                moved = True
+            
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.player.x += self.player_speed + boost
-            moved = True
+            # Create a test rectangle to check for collision
+            test_rect = self.player.copy()
+            test_rect.x += self.player_speed + boost
+            
+            # Only move if no collision with stone
+            if not self.check_for_stone_collision(test_rect):
+                self.player.x += self.player_speed + boost
+                moved = True
+            
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.player.y -= self.player_speed + boost
-            moved = True
+            # Create a test rectangle to check for collision
+            test_rect = self.player.copy()
+            test_rect.y -= self.player_speed + boost
+            
+            # Only move if no collision with stone
+            if not self.check_for_stone_collision(test_rect):
+                self.player.y -= self.player_speed + boost
+                moved = True
+            
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.player.y += self.player_speed + boost
-            moved = True
+            # Create a test rectangle to check for collision
+            test_rect = self.player.copy()
+            test_rect.y += self.player_speed + boost
+            
+            # Only move if no collision with stone
+            if not self.check_for_stone_collision(test_rect):
+                self.player.y += self.player_speed + boost
+                moved = True
 
         #prevent the player from moving out of bounds
         if self.player.left < 0:
@@ -282,6 +338,7 @@ class ChangingScreen:
         if self.player.bottom >= self.height:
             self.game_over = True
             self.game_over_message = f"Game Over, {self.username}! Too slow - keep up with the screen!"
+            self.save_score()  # Save score when falling behind
             return False
 
         return True
@@ -353,6 +410,7 @@ class ChangingScreen:
                         print("Oops! Lost the level data file during gameplay!")
                         self.game_over = True
                         self.game_over_message = f"Game Over, {self.username}! Level data went missing."
+                        self.save_score()  # Save score on error
 
             #keep object count under control
             max_objects = 1000
@@ -373,6 +431,7 @@ class ChangingScreen:
             trucks_drawn = 0
             water_tiles = 0
             grass_tiles = 0
+            stone_tiles = 0
 
             for obj in self.objects:
                 rect = obj["rect"].move(-self.camera_x, -self.camera_y)
@@ -398,6 +457,15 @@ class ChangingScreen:
                         grass_tiles += 1
                         #add a dark green border around grass tiles for visibility
                         pygame.draw.rect(self.screen, (0, 100, 0), rect, 1)
+                    elif obj["type"] == "stone":
+                        stone_tiles += 1
+                        # Add a distinctive pattern to stone tiles for visibility
+                        for i in range(0, rect.width, 10):
+                            pygame.draw.line(self.screen, (100, 100, 100), 
+                                            (rect.left + i, rect.top), 
+                                            (rect.left, rect.top + i), 
+                                            2)
+                        pygame.draw.rect(self.screen, (50, 50, 50), rect, 2)
 
                 #draw road markings on road tiles
                 if obj["type"] == "road":
@@ -425,8 +493,11 @@ class ChangingScreen:
             #show debug info on screen
             font = pygame.font.Font(None, 24)
             score = abs(int(self.camera_y))
+            # Update the final score for saving to database
+            self.final_score = score
+            
             elapsed_seconds = (pygame.time.get_ticks() - self.game_start_time) / 1000.0
-            debug_text = font.render(f"Score: {score} | Camera Y: {self.camera_y} | Trucks: {trucks_drawn} | Water: {water_tiles} | Grass: {grass_tiles} | Time: {elapsed_seconds:.1f}s", True, self.black)
+            debug_text = font.render(f"Score: {score} | Camera Y: {self.camera_y} | Trucks: {trucks_drawn} | Water: {water_tiles} | Stone: {stone_tiles} | Grass: {grass_tiles} | Time: {elapsed_seconds:.1f}s", True, self.black)
             self.screen.blit(debug_text, (10, 10))
 
             pygame.display.flip()
@@ -450,6 +521,7 @@ class ChangingScreen:
 
         except Exception as e:
             print(f"Game loop error: {e}")
+            self.save_score()  # Save score even if game crashes
 
         if self.game_over:
             pygame.quit()
@@ -458,6 +530,7 @@ class ChangingScreen:
             msg_box.setText(self.game_over_message)
             msg_box.exec_()
         else:
+            self.save_score()  # Save score on normal exit
             pygame.quit()
 
 
