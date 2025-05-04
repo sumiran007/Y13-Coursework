@@ -56,6 +56,5 @@ class ChangingScreen:
             self.clock.tick(30)
         pygame.quit()
 #set to 30 fps to make it more efficient
-if __name__ == "__main__":
-    game = ChangingScreen()
-    game.run()  
+game = ChangingScreen()
+game.run()

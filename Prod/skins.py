@@ -133,7 +133,7 @@ class SkinSelector:
         skin = self.skins[self.current_skin_index]
         
         #Show skin name
-        font = pygame.font.Font(None, 36)
+        font = pygame.font.Font(None,   36)
         name_text = font.render(skin["name"], True, self.black)
         name_rect = name_text.get_rect(center=(self.width // 2, 50))
         self.screen.blit(name_text, name_rect)
@@ -201,10 +201,7 @@ def select_skin():
     return selector.run()
 
 # Direct execution when run as main script
-if __name__ != "__main__":
-    # Only run this when imported, not when directly executed
-    pass
-else:
+if __name__ == "__main__":
     # Direct execution - for testing
     skin = select_skin()
     if skin:

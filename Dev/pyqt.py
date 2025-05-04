@@ -67,9 +67,8 @@ def load_stylesheet(path):
     with open(path, "r") as file:
         return file.read()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    style = load_stylesheet("style.css")  #load the css
-    app.setStyleSheet(style)  #apply the css
-    window = LoginWindow()  #create the login window
-    sys.exit(app.exec_())  #runz the app
+app = QApplication(sys.argv)
+style = load_stylesheet("style.css")  #load the css
+app.setStyleSheet(style)  #apply the css
+window = LoginWindow()  #create the login window
+sys.exit(app.exec_())  #run the app

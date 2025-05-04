@@ -2,11 +2,11 @@ import sqlite3
 import hashlib
 import re
 
-#Connect to the database
+#Connects to the database
 connect = sqlite3.connect('main.db')
 cursor = connect.cursor()
 
-#Hash those passwords
+#hashes those passwords
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -22,9 +22,9 @@ def create_tables():
     """)
     connect.commit()
 
-# Function to check if input contains SQL injection attempts
+#Function to check if input contains SQL injection attempts
 def is_safe_input(input_string):
-    # Check for common SQL injection patterns
+    # Checks for common SQL injection patterns
     sql_patterns = [
         r'(\s|^)(SELECT|INSERT|UPDATE|DELETE|DROP|ALTER|UNION|CREATE|EXEC|INTO)\s',
         r'(--|;|/\*|\*/)',

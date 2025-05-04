@@ -43,7 +43,3 @@ class ChangingScreen:
             self.draw()
             self.clock.tick(60)
         pygame.quit()
-
-if __name__ == "__main__":
-    game = ChangingScreen()
-    game.run()
